@@ -50,8 +50,8 @@ Objective-C
 
 Swift
 ``` swift
-TSDKTeamSnap.sharedInstance.clientId = myClientID
-TSDKTeamSnap.sharedInstance.clientSecret = myClientSecret
+TSDKTeamSnap.sharedInstance().clientId = myClientID
+TSDKTeamSnap.sharedInstance().clientSecret = myClientSecret
 ```
 
 # Usage
