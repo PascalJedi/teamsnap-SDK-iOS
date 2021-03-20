@@ -83,7 +83,7 @@
 #import "TSDKWepayAccount.h"
 #import "TSDKStripeAccount.h"
 #import "TSDKSuggestedAssignment.h"
-
+#import "TSDKHealthCheckQuestionnaire.h"
 static NSArray *_supportedSDKObjects;
 static NSArray *knownCompletionTypes;
 
@@ -171,7 +171,10 @@ static NSArray *knownCompletionTypes;
                                [TSDKWepayAccount class],
                                [TSDKStripeAccount class],
                                [TSDKPartnerPreferences class],
-                               [TSDKSuggestedAssignment class]];
+                               [TSDKSuggestedAssignment class],
+                               [TSDKHealthCheckQuestionnaire class],
+                               [TSDKHealthCheckQuestionnaireTemplate class],
+                               [TSDKHealthCheckQuestionnaireTemplateQuestion class]];
     });
     return _supportedSDKObjects;
 }
@@ -417,6 +420,41 @@ static NSArray *knownCompletionTypes;
         
         if (completion) {
             completion(success, complete, events, availabilities, nextPageURL, error);
+        }
+    }];
+}
+
++ (void)getSingleNextEventForTeam:(TSDKTeam *_Nonnull)team configuration:(TSDKRequestConfiguration *_Nullable)configuration completion:(TSDKEventCompletionBlock _Nullable)completion {
+    [[TSDKTeamSnap sharedInstance] rootLinksWithConfiguration:nil completion:^(TSDKRootLinks *rootLinks, NSError * _Nullable error) {
+        if (rootLinks) {
+            NSURL *queryURL = [rootLinks queryURL];
+            NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:queryURL resolvingAgainstBaseURL:NO];
+            NSMutableArray *queryItems = [[NSMutableArray alloc] initWithArray:urlComponents.queryItems];
+            [queryItems addObject:[NSURLQueryItem queryItemWithName:@"types" value:@"event"]];
+            [queryItems addObject:[NSURLQueryItem queryItemWithName:@"scope_to" value:@"event"]];
+            [queryItems addObject:[NSURLQueryItem queryItemWithName:@"page_size" value:@"1"]];
+            [queryItems addObject:[NSURLQueryItem queryItemWithName:@"event__team_id" value:team.objectIdentifier]];
+            [queryItems addObject:[NSURLQueryItem queryItemWithName:@"event__started_after" value:[[NSDate date] RCF3339DateTimeString]]];
+            
+            urlComponents.queryItems = queryItems;
+            
+            [TSDKDataRequest requestObjectsForPath:urlComponents.URL withConfiguration:configuration completion:^(BOOL success, BOOL complete, TSDKCollectionJSON * _Nullable objects, NSError * _Nullable error) {
+                NSMutableArray *events = [[NSMutableArray alloc] init];
+                
+                if (success) {
+                    for(id object in [self SDKObjectsFromCollection:objects]) {
+                        if([object isKindOfClass:[TSDKEvent class]]) {
+                            [events addObject:object];
+                        }
+                    }
+                }
+                
+                if (completion) {
+                    completion(success, events.firstObject, error);
+                }
+            }];
+        } else if (completion) {
+            completion(NO, nil, nil);
         }
     }];
 }

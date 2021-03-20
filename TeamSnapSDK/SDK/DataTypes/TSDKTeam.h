@@ -55,6 +55,9 @@
 @property (nonatomic, strong, nullable) NSString * locationPostalCode; //Example: 94108
 @property (nonatomic, strong, nullable) NSString * activePaymentProvider; // Example: stripe
 @property (nonatomic, strong, nullable) NSString * defaultPaymentProvider; // Example: stripe
+@property (nonatomic, strong, nullable) NSString * adUnitHeroId; // Postgame ad ID
+@property (nonatomic, strong, nullable) NSString * adUnitHeroTemplateId; // Postgame ad ID
+@property (nonatomic, strong, nullable) NSString * adUnitInlineId; // Postgame ad ID
 @property (nonatomic, strong, nullable) NSURL * linkTeamMediaGroups;
 @property (nonatomic, strong, nullable) NSURL * linkContactEmailAddresses;
 @property (nonatomic, strong, nullable) NSURL * linkMembersPreferences;
@@ -136,6 +139,9 @@
 @property (nonatomic, strong, nullable) NSURL * linkGrantedWepayAccount;
 @property (nonatomic, strong, nullable) NSURL * linkStripeAccounts;
 @property (nonatomic, strong, nullable) NSURL * linkPartnersPreferencesFlipGive;
+@property (nonatomic, strong, nullable) NSURL * linkPartnersPreferencesReigningChamps;
+@property (nonatomic, strong, nullable) NSURL * linkSuggestedAssignments;
+@property (nonatomic, strong, nullable) NSURL * linkHealthCheckQuestionnaireTemplate;
 
 - (void)setTimeZone:(NSTimeZone *_Nonnull)timeZone;
 - (NSTimeZone *_Nullable)timeZone;
@@ -290,5 +296,7 @@
 -(void)getGrantedWepayAccountWithConfiguration:(TSDKRequestConfiguration *_Nullable)configuration completion:(TSDKWepayAccountsArrayCompletionBlock _Nonnull)completion;
 -(void)getStripeAccountsWithConfiguration:(TSDKRequestConfiguration *_Nullable)configuration completion:(TSDKStripeAccountCompletionBlock _Nonnull)completion;
 -(void)getPartnersPreferencesFlipGiveWithConfiguration:(TSDKRequestConfiguration *_Nullable)configuration completion:(TSDKPartnerPreferencesArrayCompletionBlock _Nonnull)completion;
+-(void)getSuggestedAssignmentsWithConfiguration:(TSDKRequestConfiguration *_Nullable)configuration completion:(TSDKSuggestedAssignmentsArrayCompletionBlock _Nonnull)completion;
+-(void)getHealthCheckQuestionnaireTemplateWithConfiguration:(TSDKRequestConfiguration *_Nullable)configuration completion:(TSDKHealthCheckQuestionnaireTemplateArrayCompletionBlock _Nonnull)completion;
 
 @end
